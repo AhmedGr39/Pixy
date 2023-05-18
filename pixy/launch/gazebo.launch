@@ -1,0 +1,54 @@
+<launch>
+
+  <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/> <!--enabling use simulation mode tells nodes to keep their clock/timing synch with gazebo-->
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+  <arg name="model" default="$(find pixy)/urdf/pixy.urdf.xacro"/>
+  <arg name="cmd_vel" default="/cmd_vel" />
+  <arg name="world" default="simulation" />
+
+  
+
+  <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+ 
+  <env name="GAZEBO_MODEL_PATH" value="$(find pixy)/media/models:$(optenv GAZEBO_MODEL_PATH)"/>
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="me/ahmed39/catkin_ws/src/pixy/world/my_world.world"/>
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+  </include>
+  
+   
+
+  <param name="robot_description" command="$(find xacro)/xacro $(arg model)" /> 
+  <!-- <param name="robot_description" textfile="$(find pixy)/urdf/pixy.urdf.xacro" /> --> 
+
+  <!-- push robot_description to factory and spawn robot in gazebo -->
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
+        args="-z 1.0 -unpause -urdf -model pixy -param robot_description" respawn="false" output="screen" />
+
+  <node pkg="robot_state_publisher" type="robot_state_publisher"  name="robot_state_publisher">
+    <param name="publish_frequency" type="double" value="30.0" />
+  </node>
+
+<!-- 
+    <node if="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+  <node unless="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+  -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+
+
+  <!-- Teleoperation--> -->
+    <node name="teleop_twist_keyboard" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py"
+       output="screen">
+    </node>
+
+
+
+</launch>

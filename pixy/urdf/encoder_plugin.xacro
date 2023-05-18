@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="pixy" >
+
+<gazebo>
+    <plugin name="left_wheel_joint_encoder" filename="libgazebo_ros_joint_encoder.so">
+        <joint_name>left_wheel_joint</joint_name>
+        <topic_name>left_wheel_joint_encoder</topic_name>
+        <mechanical_reduction>10.0</mechanical_reduction>
+        <update_rate>100.0</update_rate>
+        </plugin>
+</gazebo>
+
+<!-- Encoder plugin for right wheel -->
+<gazebo>
+  <plugin name="right_wheel_joint_encoder" filename="libgazebo_ros_joint_encoder.so">
+    <joint_name>right_wheel_joint</joint_name>
+    <topic_name>right_wheel_joint_encoder</topic_name>
+    <mechanical_reduction>10.0</mechanical_reduction>
+    <update_rate>100.0</update_rate>
+  </plugin>
+</gazebo>
+
+
+</robot>

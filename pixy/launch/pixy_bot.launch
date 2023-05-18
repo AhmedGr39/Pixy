@@ -1,0 +1,16 @@
+
+<launch>
+  
+  <arg name="model" default="$(find pixy)/urdf/pixy.urdf.xacro"/>
+  <arg name="rvizconfig" default="$(find pixy)/rviz/urdf.rviz" /> 
+
+
+  <include file="$(find pixy)/launch/gazebo.launch">
+  
+  </include>
+  
+
+ <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" /> --> 
+
+          
+</launch>
